@@ -29,3 +29,4 @@ C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\Te
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaPessoa.g.cs
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaLivro.baml
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaPessoa.baml
+C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs

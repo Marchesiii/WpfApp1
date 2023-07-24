@@ -48,12 +48,6 @@ namespace WpfApp1
             return listaLivros;
         }
 
-        public ObservableCollection<Livro> AddLivro(string nomeLivro, int pags, string autor)
-        {
-            Livro livro = new Livro().SetNome(nomeLivro).SetPags(pags).SetAutor(autor);
-            return AddLivro(livro);
-        }
-
         public ObservableCollection<Livro> AddLivro(Livro livro)
         {
             AddNumLivros();
@@ -61,10 +55,13 @@ namespace WpfApp1
             return listaLivros;
         }
 
-        public ObservableCollection<Pessoa> AddPessoa(string nomeCompleto)
+        public ObservableCollection<IListable> AddItem(IListable ìtem)
         {
-            Pessoa pessoa = new Pessoa().SetNomeCompleto(nomeCompleto);
-            return AddPessoa(pessoa);
+            if (ìtem.TipoPessoa())
+            {
+                return new ObservableCollection<IListable>(AddPessoa((Pessoa)ìtem));
+            }
+            return new ObservableCollection<IListable>(AddLivro((Livro)ìtem));
         }
 
         internal ObservableCollection<Pessoa> AddPessoa(Pessoa pessoa)
@@ -74,55 +71,47 @@ namespace WpfApp1
             return listaPessoa;
         }
 
-        public void RemoverPessoa(Pessoa pessoa)
+        public ObservableCollection<IListable> RemoverItem(IListable itemSelecionado)
+        {
+            if (itemSelecionado.TipoPessoa())
+            {
+                RemoverPessoa((Pessoa)itemSelecionado);
+                return new ObservableCollection<IListable>(listaPessoa);
+                
+            }
+            else
+            {
+                RemoverLivro((Livro)itemSelecionado);
+                return new ObservableCollection<IListable>(listaLivros); 
+            }
+        }
+
+        public bool RemoverPessoa(Pessoa pessoa)
         {
             if (pessoa != null)
             {
                 listaPessoa.Remove(pessoa);
                 RemoveNumPessoa();
+                return true;
             } else
             {
-                throw new Exception("Não encontramos um pessoa com esse codigo para ser removido.");
+                return false;
             }
 
         }
 
-        public void RemoverLivro(Livro livro)
+        public bool RemoverLivro(Livro livro)
         {
             if (livro != null)
             {
                 listaLivros.Remove(livro);
                 RemoveNumLivros();
+                return true;
             } else
             {
-                throw new Exception("Não encontramos um livro com esse codigo para ser removido.");
+                return false;
             }
 
-        }
-
-        public Livro BuscaLivro(int codigo)
-        {
-            foreach (Livro item in listaLivros)
-            {
-                if (item.Getcodigo() == codigo)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        public Pessoa BuscaPessoa(int codigo)
-        {
-            foreach (Pessoa item in listaPessoa)
-            {
-                if (item.GetCodigo() == codigo)
-                {
-                    return item;
-                }
-            }
-
-            return null;
         }
 
         public Biblioteca AddNumPessoa()
@@ -147,18 +136,16 @@ namespace WpfApp1
             return this;
         }
 
-        public int getNumLivros()
+        public ObservableCollection<IListable> SubstituiItem(IListable itemClone, IListable item)
         {
-            return numLivros;
+            if (item.TipoPessoa())
+            {
+                return new ObservableCollection<IListable>(SubstituiPessoa((Pessoa)itemClone,(Pessoa) item));
+            } else
+            {
+                return new ObservableCollection<IListable>(SubstituiLivro((Livro)itemClone,(Livro) item));
+            }
         }
-
-        public int getNumPessoas()
-        {
-            return numPessoas;
-        }
-
-        //AtualizarDadosPessoa
-        //ListarPessoas
     }
 
     internal static class ListaStaticPessoa

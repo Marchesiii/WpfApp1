@@ -12,22 +12,18 @@ namespace WpfApp1
 {
     public class MainWindowVm : INotifyPropertyChanged
     {
-        public ObservableCollection<Pessoa> vmPessoas { get; set; }
-        public ObservableCollection<Livro> vmLivros { get; set; }
         public ObservableCollection<IListable> ListaListable { get; set; }
         private Biblioteca Biblioteca { get; set; }
         public ICommand Add { get; private set; }
         public ICommand Remove { get; private set; }
         public ICommand Update { get; private set; }
-        public ICommand Peek { get; private set; }
         public ICommand Emprestar { get; set; }
         public ICommand Devolver { get; set; }
         public ICommand Info { get; set; }
-        public Pessoa PessoaSelecionada { get; set; }
-        public Livro LivroSelecionado { get; set; }
         public IListable ItemSelecionado { get; set; }
 
         public string TipoSelecionado { get; set; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -41,60 +37,35 @@ namespace WpfApp1
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nome));
         }
 
-        public bool tipoPessoas()
+        public IListable getTipoSelecionado()
         {
-            if (TipoSelecionado.Equals(TipoListable.Pessoa.ToString()))
+            if (TipoSelecionado.Equals(nameof(Pessoa)))
             {
-                return true;
+                return new Pessoa();
             }
-            return false;
+            return new Livro();
         }
 
 
         public void IniciaCommandos() {
-            TipoSelecionado = TipoListable.Pessoa.ToString();
+            TipoSelecionado = nameof(Pessoa);
             GetVmListableWithNotify();
             Add = new RelayCommand((object param) =>
             {
-                if (tipoPessoas())
-                {
-                    //CadastraPessoa
-                    ListaListable = Listable.CadastraPessoa(Biblioteca);
-                }
-                else
-                {
-                    //CadastraLivro
-                    ListaListable = Listable.CadastraLivro(Biblioteca);
-
-                }
+                ListaListable = Listable.CadastraItem(getTipoSelecionado(), Biblioteca);
                 Notifica(nameof(ListaListable));
             });
             Remove = new RelayCommand((object param) =>
             {
-                if (tipoPessoas())
-                {
-                    Pessoa pessoa = (Pessoa)ItemSelecionado;
-                    ListaListable = Listable.RemovePessoa(pessoa, Biblioteca);
-                } else
-                {
-                    Livro livro = (Livro)ItemSelecionado;
-                    ListaListable = Listable.RemoveLivro(livro, Biblioteca);
-                }
+                ListaListable = Listable.RemoveItem(ItemSelecionado, Biblioteca);
                 Notifica(nameof(ListaListable));
             }, (object param2) => {
-                return ItemSelecionado != null;
+                
+                return ItemSelecionado != null && !ItemSelecionado.Ocupado();
             });
             Update = new RelayCommand((object param) =>
             {
-                if (tipoPessoas())
-                {
-                    Pessoa pessoa = (Pessoa)ItemSelecionado;
-                    ListaListable = Listable.AlteraPessoa(pessoa, Biblioteca);
-                } else
-                {
-                    Livro livro = (Livro)ItemSelecionado;
-                    ListaListable = Listable.AlteraLivro(livro, Biblioteca);
-                }
+                ListaListable = Listable.AlteraItem(ItemSelecionado, Biblioteca);
                 Notifica(nameof(ListaListable));
             }, (object param2) => {
                 return ItemSelecionado != null;
@@ -132,7 +103,7 @@ namespace WpfApp1
                     Notifica(nameof(ListaListable));
                 }
             }, (object param2) => {
-                if (ItemSelecionado != null && !tipoPessoas()) {
+                if (ItemSelecionado != null && !getTipoSelecionado().GetType().Equals(typeof(Pessoa))) {
                     try
                     {
                         return ((Livro)ItemSelecionado).GetPessoas() == null;
@@ -151,7 +122,7 @@ namespace WpfApp1
                 MessageBox.Show("Livro devolvido por: " + pessoa.GetNomeCompleto());
                 Notifica(nameof(ListaListable));
             }, (object param2) => {
-                if (ItemSelecionado != null && !tipoPessoas())
+                if (ItemSelecionado != null && !getTipoSelecionado().GetType().Equals(typeof(Pessoa)))
                 {
                     try
                     {
@@ -165,21 +136,9 @@ namespace WpfApp1
                 return false;
             });
             Info = new RelayCommand((object param) => {
-                if (tipoPessoas())
-                {
-                    TelaPessoa telaPessoa = new TelaPessoa
-                    {
-                        DataContext = (Pessoa) ItemSelecionado
-                    };
-                    telaPessoa.ShowDialog();
-                } else
-                {
-                    TelaLivro telaLivro = new TelaLivro
-                    {
-                        DataContext = (Livro)ItemSelecionado
-                    };
-                    telaLivro.ShowDialog();
-                }
+                Window tela = ItemSelecionado.GetTelaInfo();
+                tela.DataContext = ItemSelecionado;
+                tela.ShowDialog();
             }, (object param2) =>
             {
                 return ItemSelecionado != null;
@@ -188,7 +147,7 @@ namespace WpfApp1
 
         public void GetVmListableWithNotify()
         {
-            if (tipoPessoas())
+            if (TipoSelecionado.Equals(nameof(Pessoa)))
             {
                 GetVmPessoasToListable();
             } else
@@ -200,26 +159,12 @@ namespace WpfApp1
 
         private void GetVmLivrosToListable()
         {
-            if (vmLivros == null)
-            {
-                vmLivros = new ObservableCollection<Livro>();
-            } else
-            {
-                vmLivros = Biblioteca.listaLivros;
-            }
-            ListaListable = new ObservableCollection<IListable>(vmLivros);
+            ListaListable = new ObservableCollection<IListable>(Biblioteca.listaLivros);
         }
 
         private void GetVmPessoasToListable()
         {
-            if (vmPessoas == null)
-            {
-                vmPessoas = new ObservableCollection<Pessoa>();
-            } else
-            {
-                vmPessoas = Biblioteca.listaPessoa;
-            }
-            ListaListable = new ObservableCollection<IListable>(vmPessoas);
+            ListaListable = new ObservableCollection<IListable>(Biblioteca.listaPessoa);
         }
     }
 }

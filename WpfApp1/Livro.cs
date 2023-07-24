@@ -104,21 +104,6 @@ namespace WpfApp1
             return false;
         }
 
-        public static void CheckLivro(Livro livro)
-        {
-            if (!string.IsNullOrEmpty(livro.GetAutor()))
-            {
-                if (!string.IsNullOrEmpty(livro.GetNome()))
-                {
-                    if (int.IsPositive(livro.GetPags()))
-                    {
-                        return;
-                    }
-                }
-            }
-            throw new ArgumentException("Precisamos definir todos os campos antes de salvar.");
-        }
-
         public Livro Clone()
         {
             Livro obj = new Livro();
@@ -127,6 +112,44 @@ namespace WpfApp1
             obj.pags = pags;
             obj.pessoas = pessoas;
             return obj;
+        }
+
+        public bool Check(PseudoExc ex)
+        {
+            if (!string.IsNullOrEmpty(GetAutor()))
+            {
+                if (!string.IsNullOrEmpty(GetNome()))
+                {
+                    if (int.IsPositive(GetPags()))
+                    {
+                        return true;
+                    } else
+                    {
+                        ex.ex = "O numero de pagnas precsa ser positivo.";
+                    }
+                } else
+                {
+                    ex.ex = "O Nome precisa ser preenchido.";
+                }
+            } else
+            {
+                ex.ex = "O Autor precisa ser preenchido.";
+            }
+            return false;
+        }
+
+        public Window GetTelaCadastro()
+        {
+            return new TelaCadastroLivro();
+        }
+
+        public Window GetTelaInfo()
+        {
+            return new TelaLivro();
+        }
+        public bool Ocupado()
+        {
+            return pessoas != null;
         }
     }
 

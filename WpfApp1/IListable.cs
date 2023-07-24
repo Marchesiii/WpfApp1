@@ -1,9 +1,18 @@
-﻿namespace WpfApp1
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Windows;
+
+namespace WpfApp1
 {
     public interface IListable
     {
-        int Codigo { get; set; }
-        string NomeCompleto { get; set; }
         public bool TipoPessoa();
+
+        public bool Check(PseudoExc ex);
+
+        public Window GetTelaCadastro();
+
+        public Window GetTelaInfo();
+        public bool Ocupado();
     }
 }

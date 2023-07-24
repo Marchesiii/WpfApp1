@@ -86,18 +86,36 @@ namespace WpfApp1
             return this;
         }
 
-        public static void CheckPessoa(Pessoa pessoa)
+        public bool Check(PseudoExc ex)
         {
-            if (string.IsNullOrEmpty(pessoa.GetNomeCompleto()))
+            if (string.IsNullOrEmpty(GetNomeCompleto()))
             {
-                throw new ArgumentException("Precisamos definir um nome para a Pessoa.");
+                ex.ex = "Precisamos definir um nome para a Pessoa.";
+                return false;
+            } else
+            {
+                return true;
             }
+        }
 
+        public Window GetTelaCadastro()
+        {
+            return new TelaCadastro();
+        }
+
+        public Window GetTelaInfo()
+        {
+            return new TelaPessoa();
         }
 
         public bool TipoPessoa()
         {
             return true;
+        }
+
+        public bool Ocupado()
+        {
+            return livrosEmprestados.Any();
         }
 
         public Pessoa Clone()

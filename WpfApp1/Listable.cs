@@ -10,127 +10,62 @@ namespace WpfApp1
 {
     public static class Listable
     {
-     //Futuramente tem que ser atomico em!
-        public static ObservableCollection<IListable> AlteraPessoa(Pessoa pessoa, Biblioteca biblioteca) 
+        //Futuramente tem que ser atomico em!
+
+        public static ObservableCollection<IListable> AlteraItem(IListable item, Biblioteca biblioteca)
         {
-            Pessoa pessoaClone = pessoa.Clone();
+            ObservableCollection<IListable> result = new();
+            IListable itemClone = item;
             bool dialogResult = true;
             while (dialogResult)
             {
-                TelaCadastro telaCadastro = new TelaCadastro
+                Window tela = itemClone.GetTelaCadastro();
+                tela.DataContext = itemClone;
+                tela.ShowDialog();
+                dialogResult = (bool)tela.DialogResult;
+                if(dialogResult)
                 {
-                    DataContext = pessoaClone
-                };
-                telaCadastro.ShowDialog();
-                dialogResult = (bool)telaCadastro.DialogResult;
-                if (dialogResult)
-                {
-                    try
+                    PseudoExc ex = new PseudoExc();
+                    if(itemClone.Check(ex)){
+                        return biblioteca.SubstituiItem(itemClone, item);
+                    } else
                     {
-                        Pessoa.CheckPessoa(pessoaClone);
-                        return new ObservableCollection<IListable>(biblioteca.SubstituiPessoa(pessoaClone, pessoa));
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(ex.ex);
                     }
                 }
             }
-            return new ObservableCollection<IListable>(biblioteca.listaPessoa);
+            return result;
         }
 
-        public static ObservableCollection<IListable> AlteraLivro(Livro livro, Biblioteca biblioteca)
+        public static ObservableCollection<IListable> CadastraItem(IListable item, Biblioteca biblioteca)
         {
-            Livro livroClone = livro.Clone();
             bool dialogResult = true;
-            while(dialogResult) {
-                TelaCadastro telaCadastro = new TelaCadastro
-                {
-                    DataContext = livroClone
-                };
-                telaCadastro.ShowDialog();
-                dialogResult = (bool)telaCadastro.DialogResult;
-                if (dialogResult)
-                {
-                    try
-                    {
-                        Livro.CheckLivro(livroClone);
-                        return new ObservableCollection<IListable>(biblioteca.SubstituiLivro(livroClone, livro));
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-            }
-            return new ObservableCollection<IListable>(biblioteca.listaLivros);
-        }
-        public static ObservableCollection<IListable> CadastraPessoa(Biblioteca biblioteca)
-        {
-            Pessoa pessoa = new Pessoa();
-            bool dialogResult = true;
+            ObservableCollection<IListable> listaResult = new ObservableCollection<IListable>();
             while (dialogResult)
             {
-                TelaCadastro telaCadastro = new TelaCadastro
-                {
-                    DataContext = pessoa
-                };
-                telaCadastro.ShowDialog();
-                dialogResult = (bool)telaCadastro.DialogResult;
+                Window tela = item.GetTelaCadastro();
+                tela.DataContext = item;
+                tela.ShowDialog();
+                dialogResult = (bool)tela.DialogResult;
                 if (dialogResult)
                 {
-                    try
+                    PseudoExc exc = new PseudoExc();
+                    if (item.Check(exc))
                     {
-                        Pessoa.CheckPessoa(pessoa);
-                        return new ObservableCollection<IListable>(biblioteca.AddPessoa(pessoa));
+                        return new ObservableCollection<IListable>(biblioteca.AddItem(item));
                     }
-                    catch (ArgumentException ex)
+                    else
                     {
-                        MessageBox.Show(ex.Message);
+                        MessageBox.Show(exc.ex);
                     }
                 }
             }
-            return new ObservableCollection<IListable>(biblioteca.listaPessoa);
+            return listaResult;
         }
 
-        public static ObservableCollection<IListable> CadastraLivro(Biblioteca biblioteca)
+        public static ObservableCollection<IListable> RemoveItem(IListable itemSelecionado, Biblioteca biblioteca)
         {
-            Livro livro = new Livro();
-            bool dialogResult = true;
-            while (dialogResult)
-            {
-                TelaCadastroLivro telaCadastro = new TelaCadastroLivro
-                {
-                    DataContext = livro
-                };
-                telaCadastro.ShowDialog();
-                dialogResult = (bool)telaCadastro.DialogResult;
-                if (dialogResult)
-                {   
-                    try
-                    {
-                        Livro.CheckLivro(livro);
-                        return new ObservableCollection<IListable>(biblioteca.AddLivro(livro));
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
-                }
-            }
-            return new ObservableCollection<IListable>(biblioteca.listaLivros);
-        }
-
-        public static ObservableCollection<IListable> RemovePessoa(Pessoa pessoaInt, Biblioteca biblioteca)
-        {
-            biblioteca.RemoverPessoa(pessoaInt);
-            return new ObservableCollection<IListable>(biblioteca.listaPessoa);
-        }
-
-        public static ObservableCollection<IListable> RemoveLivro(Livro livroInt, Biblioteca biblioteca)
-        {
-            biblioteca.RemoverLivro(livroInt);
-            return new ObservableCollection<IListable>(biblioteca.listaLivros);
+            return biblioteca.RemoverItem(itemSelecionado);
         }
     }
 }
