@@ -13,10 +13,10 @@ namespace WpfApp1
     {
         private string nomeCompleto;
         private int codigo;
-        public string NomeCompleto { 
+        public string NomeCompleto {
             get { return nomeCompleto; }
             set {
-                if(string.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     MessageBox.Show("Precisamos definir um nome para a Pessoa.");
                 } else
@@ -30,6 +30,7 @@ namespace WpfApp1
                 codigo = value;
             }
         }
+        public ObservableCollection<Livro> LivrosEmprestados { get { return livrosEmprestados; } set { livrosEmprestados = value; } }
         private ObservableCollection<Livro> livrosEmprestados;
 
         public Pessoa()

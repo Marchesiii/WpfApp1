@@ -23,6 +23,9 @@ C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\Te
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaCadastro.baml
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaCadastroLivro.g.cs
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaCadastroLivro.baml
-C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\GeneratedInternalTypeHelper.g.cs
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\ListaEmprestimos.g.cs
 C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\ListaEmprestimos.baml
+C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaLivro.g.cs
+C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaPessoa.g.cs
+C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaLivro.baml
+C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\TelaPessoa.baml

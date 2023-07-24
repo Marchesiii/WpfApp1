@@ -16,6 +16,12 @@
     <Compile Update="TelaCadastroLivro.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="TelaLivro.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="TelaPessoa.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Page Update="ListaEmprestimos.xaml">
@@ -28,6 +34,12 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="TelaCadastroLivro.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TelaLivro.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="TelaPessoa.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

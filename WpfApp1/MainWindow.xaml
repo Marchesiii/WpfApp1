@@ -26,5 +26,6 @@
         <Button Command="{Binding Update}" Content="Alterar" HorizontalAlignment="Left" Margin="10,368,0,0" VerticalAlignment="Top" Height="20" Width="39" />
         <Button Command="{Binding Emprestar}" Content="Emprestar" HorizontalAlignment="Left" Margin="10,398,0,0" VerticalAlignment="Top" Height="20" Width="57"/>
         <Button Command="{Binding Devolver}" Content="Devolver" HorizontalAlignment="Left" Margin="10,433,0,0" VerticalAlignment="Top" Height="20" Width="51"/>
+        <Button Command="{Binding Info}" Content="Informacoes" HorizontalAlignment="Left" Margin="10,466,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

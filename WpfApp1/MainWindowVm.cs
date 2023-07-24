@@ -22,6 +22,7 @@ namespace WpfApp1
         public ICommand Peek { get; private set; }
         public ICommand Emprestar { get; set; }
         public ICommand Devolver { get; set; }
+        public ICommand Info { get; set; }
         public Pessoa PessoaSelecionada { get; set; }
         public Livro LivroSelecionado { get; set; }
         public IListable ItemSelecionado { get; set; }
@@ -70,22 +71,22 @@ namespace WpfApp1
             });
             Remove = new RelayCommand((object param) =>
             {
-                    if (tipoPessoas())
-                    {
-                        Pessoa pessoa = (Pessoa)ItemSelecionado;
-                        ListaListable = Listable.RemovePessoa(pessoa, Biblioteca);
-                    } else
-                    {
-                        Livro livro = (Livro)ItemSelecionado;
-                        ListaListable = Listable.RemoveLivro(livro, Biblioteca);
-                    }
+                if (tipoPessoas())
+                {
+                    Pessoa pessoa = (Pessoa)ItemSelecionado;
+                    ListaListable = Listable.RemovePessoa(pessoa, Biblioteca);
+                } else
+                {
+                    Livro livro = (Livro)ItemSelecionado;
+                    ListaListable = Listable.RemoveLivro(livro, Biblioteca);
+                }
                 Notifica(nameof(ListaListable));
             }, (object param2) => {
                 return ItemSelecionado != null;
             });
             Update = new RelayCommand((object param) =>
             {
-                if(tipoPessoas())
+                if (tipoPessoas())
                 {
                     Pessoa pessoa = (Pessoa)ItemSelecionado;
                     ListaListable = Listable.AlteraPessoa(pessoa, Biblioteca);
@@ -99,7 +100,7 @@ namespace WpfApp1
                 return ItemSelecionado != null;
             });
             Emprestar = new RelayCommand((object param) =>
-            {   
+            {
                 Livro livro = (Livro)ItemSelecionado;
                 ItemSelecionado = null;
                 try
@@ -113,15 +114,15 @@ namespace WpfApp1
                             DataContext = this
                         };
                         listaEmp.ShowDialog();
-                        results = (bool) listaEmp.DialogResult;
-                        if(results && ItemSelecionado != null)
+                        results = (bool)listaEmp.DialogResult;
+                        if (results && ItemSelecionado != null)
                         {
                             Biblioteca.EmprestarLivro(livro, (Pessoa)ItemSelecionado);
                             MessageBox.Show("Livro emprestado para a pessoa selecionada.");
                             return;
                         } else
                         {
-                            if(results)
+                            if (results)
                                 MessageBox.Show("Selecione ao menos uma pessoa para efetivar o emprestimo ou feche a aba.");
                         }
                     }
@@ -131,7 +132,7 @@ namespace WpfApp1
                     Notifica(nameof(ListaListable));
                 }
             }, (object param2) => {
-                if(ItemSelecionado != null && !tipoPessoas()) { 
+                if (ItemSelecionado != null && !tipoPessoas()) {
                     try
                     {
                         return ((Livro)ItemSelecionado).GetPessoas() == null;
@@ -162,6 +163,26 @@ namespace WpfApp1
                     }
                 }
                 return false;
+            });
+            Info = new RelayCommand((object param) => {
+                if (tipoPessoas())
+                {
+                    TelaPessoa telaPessoa = new TelaPessoa
+                    {
+                        DataContext = (Pessoa) ItemSelecionado
+                    };
+                    telaPessoa.ShowDialog();
+                } else
+                {
+                    TelaLivro telaLivro = new TelaLivro
+                    {
+                        DataContext = (Livro)ItemSelecionado
+                    };
+                    telaLivro.ShowDialog();
+                }
+            }, (object param2) =>
+            {
+                return ItemSelecionado != null;
             });
         }
 

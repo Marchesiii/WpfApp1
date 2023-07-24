@@ -14,6 +14,7 @@ namespace WpfApp1
         private string nomeCompleto;
         private int pags;
         private string autor;
+        public Pessoa Pessoas { get { return pessoas; } set { pessoas = value; } }
         private Pessoa pessoas;
         public int Codigo { get { return codigo; } set { codigo = value; } }
         public string NomeCompleto { get { return nomeCompleto; } set {
