@@ -1,0 +1,21 @@
+﻿<Window x:Class="WpfApp1.ListaEmprestimos"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WpfApp1"
+        mc:Ignorable="d"
+        Title="ListaEmprestimos" Height="200" Width="200">
+    <Grid>
+        <ListView d:ItemsSource="{d:SampleData ItemCount=5}" SelectedItem="{Binding ItemSelecionado}" ItemsSource="{Binding ListaListable}" Margin="0,0,0,49">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Codigo" DisplayMemberBinding="{Binding Path=Codigo}"/>
+                    <GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Path=NomeCompleto}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Selecionar" HorizontalAlignment="Center" Margin="0,140,0,0" VerticalAlignment="Top" Width="84" Click="Button_Click"/>
+
+    </Grid>
+</Window>
