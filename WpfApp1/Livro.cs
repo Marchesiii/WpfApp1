@@ -104,16 +104,6 @@ namespace WpfApp1
             return false;
         }
 
-        public Livro Clone()
-        {
-            Livro obj = new Livro();
-            obj.autor = autor;
-            obj.nomeCompleto = nomeCompleto;
-            obj.pags = pags;
-            obj.pessoas = pessoas;
-            return obj;
-        }
-
         public bool Check(PseudoExc ex)
         {
             if (!string.IsNullOrEmpty(GetAutor()))

@@ -37,7 +37,7 @@ namespace WpfApp1
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nome));
         }
 
-        public IListable getTipoSelecionado()
+        public IListable GetTipoSelecionado()
         {
             if (TipoSelecionado.Equals(nameof(Pessoa)))
             {
@@ -52,7 +52,7 @@ namespace WpfApp1
             GetVmListableWithNotify();
             Add = new RelayCommand((object param) =>
             {
-                ListaListable = Listable.CadastraItem(getTipoSelecionado(), Biblioteca);
+                ListaListable = Listable.CadastraItem(GetTipoSelecionado(), Biblioteca);
                 Notifica(nameof(ListaListable));
             });
             Remove = new RelayCommand((object param) =>
@@ -103,7 +103,7 @@ namespace WpfApp1
                     Notifica(nameof(ListaListable));
                 }
             }, (object param2) => {
-                if (ItemSelecionado != null && !getTipoSelecionado().GetType().Equals(typeof(Pessoa))) {
+                if (ItemSelecionado != null && !GetTipoSelecionado().GetType().Equals(typeof(Pessoa))) {
                     try
                     {
                         return ((Livro)ItemSelecionado).GetPessoas() == null;
@@ -122,7 +122,7 @@ namespace WpfApp1
                 MessageBox.Show("Livro devolvido por: " + pessoa.GetNomeCompleto());
                 Notifica(nameof(ListaListable));
             }, (object param2) => {
-                if (ItemSelecionado != null && !getTipoSelecionado().GetType().Equals(typeof(Pessoa)))
+                if (ItemSelecionado != null && !GetTipoSelecionado().GetType().Equals(typeof(Pessoa)))
                 {
                     try
                     {

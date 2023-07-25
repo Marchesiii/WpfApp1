@@ -30,7 +30,7 @@ namespace WpfApp1
                 codigo = value;
             }
         }
-        public ObservableCollection<Livro> LivrosEmprestados { get { return livrosEmprestados; } set { livrosEmprestados = value; } }
+        public ObservableCollection<Livro> LivrosEmprestados { get { return livrosEmprestados; } private set { livrosEmprestados = value; } }
         private ObservableCollection<Livro> livrosEmprestados;
 
         public Pessoa()
@@ -57,17 +57,7 @@ namespace WpfApp1
             return nomeCompleto;
         }
 
-        public int GetCodigo()
-        {
-            return codigo;
-        }
-
-        public ObservableCollection<Livro> GetlivrosEmprestados()
-        {
-            return livrosEmprestados;
-        }
-
-        public Pessoa SetLivrosEmprestados(ObservableCollection<Livro> lista)
+        private Pessoa SetLivrosEmprestados(ObservableCollection<Livro> lista)
         {
             livrosEmprestados = lista;
             return this;
@@ -116,15 +106,6 @@ namespace WpfApp1
         public bool Ocupado()
         {
             return livrosEmprestados.Any();
-        }
-
-        public Pessoa Clone()
-        {
-            Pessoa pessoaInt = new Pessoa();
-            pessoaInt.SetCodigo(codigo);
-            pessoaInt.SetNomeCompleto(nomeCompleto);
-            pessoaInt.SetLivrosEmprestados(livrosEmprestados);
-            return pessoaInt;
         }
     }
 }
