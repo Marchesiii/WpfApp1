@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\
+C:\Git\WpfApp1\WpfApp1\obj\Debug\net7.0-windows\
 WpfApp1
 none
 false
 TRACE;DEBUG;NET;NET7_0;NETCOREAPP
-C:\Users\andre.marchesi\source\repos\WpfApp1\WpfApp1\App.xaml
-61896392208
+C:\Git\WpfApp1\WpfApp1\App.xaml
+6-1764351212
 
-20-1677768301
+181864026078
 198-651932399
-ListaEmprestimos.xaml;MainWindow.xaml;TelaCadastro.xaml;TelaCadastroLivro.xaml;TelaLivro.xaml;TelaPessoa.xaml;
+Views\Cadastro\TelaCadastro.xaml;Views\Cadastro\TelaCadastroLivro.xaml;Views\Detalhes\ListaEmprestimos.xaml;Views\Detalhes\TelaLivro.xaml;Views\Detalhes\TelaPessoa.xaml;Views\MainWindow.xaml;
 
-False
+True
 

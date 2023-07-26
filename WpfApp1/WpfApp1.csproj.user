@@ -7,39 +7,39 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="ListaEmprestimos.xaml.cs">
+    <Compile Update="Views\Detalhes\ListaEmprestimos.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="TelaCadastro.xaml.cs">
+    <Compile Update="Views\Cadastro\TelaCadastro.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="TelaCadastroLivro.xaml.cs">
+    <Compile Update="Views\Cadastro\TelaCadastroLivro.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="TelaLivro.xaml.cs">
+    <Compile Update="Views\Detalhes\TelaLivro.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="TelaPessoa.xaml.cs">
+    <Compile Update="Views\Detalhes\TelaPessoa.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="ListaEmprestimos.xaml">
+    <Page Update="Views\Detalhes\ListaEmprestimos.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainWindow.xaml">
+    <Page Update="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="TelaCadastro.xaml">
+    <Page Update="Views\Cadastro\TelaCadastro.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="TelaCadastroLivro.xaml">
+    <Page Update="Views\Cadastro\TelaCadastroLivro.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="TelaLivro.xaml">
+    <Page Update="Views\Detalhes\TelaLivro.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="TelaPessoa.xaml">
+    <Page Update="Views\Detalhes\TelaPessoa.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
