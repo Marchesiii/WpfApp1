@@ -1,26 +1,30 @@
 ﻿
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using WpfApp1.Model.Biblioteca.Interfaces;
 
-namespace WpfApp1.Model.Biblioteca.ItemsBiblioteca
+namespace WpfApp1
 {
-    public class Pessoa : IListable
+    public class Pessoa : IItem
     {
         private string nomeCompleto;
         private int codigo;
-        private ObservableCollection<Livro> livrosEmprestados;
+        private List<Livro> livrosEmprestados;
 
         public Pessoa()
         {
             nomeCompleto = "";
             codigo = 0;
-            livrosEmprestados = new ObservableCollection<Livro>();
+            livrosEmprestados = new List<Livro>();
         }
+
+        public List<Livro> LivrosEmprestados { get => livrosEmprestados; private set { livrosEmprestados = value; } }
 
         public string NomeCompleto
         {
-            get { return nomeCompleto; }
+            get => nomeCompleto;
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -35,48 +39,17 @@ namespace WpfApp1.Model.Biblioteca.ItemsBiblioteca
         }
         public int Codigo
         {
-            get { return codigo; }
+            get => codigo;
             set
             {
                 codigo = value;
             }
         }
-        public ObservableCollection<Livro> LivrosEmprestados { get { return livrosEmprestados; } private set { livrosEmprestados = value; } }
-
-
-        public Pessoa SetNomeCompleto(string n)
-        {
-            nomeCompleto = n;
-            return this;
-        }
-
-        public Pessoa SetCodigo(int c)
-        {
-            codigo = c;
-            return this;
-        }
-
-        public string GetNomeCompleto()
-        {
-            return nomeCompleto;
-        }
-
-
-        public Pessoa AddLivrosEmprestados(Livro livro)
-        {
-            livrosEmprestados.Add(livro);
-            return this;
-        }
-
-        public Pessoa RemoveLivroEmprestado(Livro livro)
-        {
-            livrosEmprestados.Remove(livro);
-            return this;
-        }
+        public bool Ocupado() => livrosEmprestados.Any();
 
         public bool Check(PseudoExc ex)
         {
-            if (string.IsNullOrEmpty(GetNomeCompleto()))
+            if (string.IsNullOrEmpty(nomeCompleto))
             {
                 ex.ex = "Precisamos definir um nome para a Pessoa.";
                 return false;
@@ -87,24 +60,10 @@ namespace WpfApp1.Model.Biblioteca.ItemsBiblioteca
             }
         }
 
-        public Window GetTelaCadastro()
+        public IItem Clone()
         {
-            return new TelaCadastro();
-        }
-
-        public Window GetTelaInfo()
-        {
-            return new TelaPessoa();
-        }
-
-        public bool TipoPessoa()
-        {
-            return true;
-        }
-
-        public bool Ocupado()
-        {
-            return livrosEmprestados.Any();
+            Pessoa clone = (Pessoa)MemberwiseClone();
+            return clone;
         }
     }
 }

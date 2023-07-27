@@ -5,18 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace WpfApp1.Model.Biblioteca
+namespace WpfApp1
 {
     public class RelayCommand : ICommand
     {
         private Action<object> execute;
         private Func<object, bool> canExecute;
-
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
 
         public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
         {
@@ -24,10 +18,14 @@ namespace WpfApp1.Model.Biblioteca
             this.canExecute = canExecute;
         }
 
-        public bool CanExecute(object parameter)
+        public event EventHandler? CanExecuteChanged
         {
-            return canExecute == null || canExecute(parameter);
+            add { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
+
+
+        public bool CanExecute(object parameter) => canExecute == null || canExecute(parameter);
 
         public void Execute(object parameter)
         {

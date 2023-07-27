@@ -18,8 +18,8 @@
         <TextBox IsEnabled="False" HorizontalAlignment="Left" Margin="60,100,0,0" TextWrapping="Wrap" Text="{Binding Pags}" VerticalAlignment="Top" Width="120"/>
         <Label Content="Codigo" HorizontalAlignment="Left" Margin="31,166,0,0" VerticalAlignment="Top"/>
         <Label Content="Nome" HorizontalAlignment="Left" Margin="31,196,0,0" VerticalAlignment="Top"/>
-        <TextBox IsEnabled="False" HorizontalAlignment="Left" Margin="85,170,0,0" TextWrapping="Wrap" Text="{Binding Pessoas.Codigo}" VerticalAlignment="Top" Width="120"/>
-        <TextBox IsEnabled="False" HorizontalAlignment="Left" Margin="85,200,0,0" TextWrapping="Wrap" Text="{Binding Pessoas.NomeCompleto}" VerticalAlignment="Top" Width="120"/>
+        <TextBox IsEnabled="False" HorizontalAlignment="Left" Margin="85,170,0,0" TextWrapping="Wrap" Text="{Binding Pessoa.Codigo}" VerticalAlignment="Top" Width="120"/>
+        <TextBox IsEnabled="False" HorizontalAlignment="Left" Margin="85,200,0,0" TextWrapping="Wrap" Text="{Binding Pessoa.NomeCompleto}" VerticalAlignment="Top" Width="120"/>
 
     </Grid>
 </Window>

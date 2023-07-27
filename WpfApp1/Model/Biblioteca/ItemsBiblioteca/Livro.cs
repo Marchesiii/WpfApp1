@@ -1,153 +1,93 @@
 ﻿using System.Windows;
+using WpfApp1.Model.Biblioteca.Interfaces;
 
-namespace WpfApp1.Model.Biblioteca.ItemsBiblioteca
+namespace WpfApp1
 {
-    public class Livro : IListable
+    public class Livro : IItem
     {
         private int codigo;
         private string nomeCompleto;
         private int pags;
         private string autor;
-        private Pessoa? pessoas;
+        private Pessoa? pessoa;
 
         public Livro()
         {
-            pessoas = null;
+            pessoa = null;
             codigo = 0;
             nomeCompleto = string.Empty;
             autor = string.Empty;
             pags = 0;
         }
-        public int Codigo { get { return codigo; } set { codigo = value; } }
-        public Pessoa? Pessoas { get { return pessoas; } set { pessoas = value; } }
+        public int Codigo { get => codigo; set { codigo = value; } }
+        public Pessoa? Pessoa { get => pessoa; set { pessoa = value; } }
+        public int Pags { get => pags; set { pags = value; } }
         public string NomeCompleto
         {
-            get { return nomeCompleto; }
+            get => nomeCompleto;
+
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (Valids.CheckStringNullOrEmpty(value))
                 {
-                    MessageBox.Show("Precisamos definir um nome para o Livro.");
+                    Valids.DisplayValidationError("Precisamos definir um nome para o Livro.");
                 }
                 else
+                {
                     nomeCompleto = value;
-
+                }
             }
         }
+
         public string Autor
         {
-            get { return autor; }
+            get => autor;
             set
             {
-                if (string.IsNullOrEmpty(value))
+                if (Valids.CheckStringNullOrEmpty(value))
                 {
-                    MessageBox.Show("Precisamos definir um autor.");
+                    Valids.DisplayValidationError("Precisamos definir um autor.");
                 }
                 else
+                {
                     autor = value;
+                }
             }
         }
-        public int Pags { get { return pags; } set { pags = value; } }
 
-        public Pessoa? GetPessoas()
-        {
-            return pessoas;
-        }
-
-        public string GetNome()
-        {
-            return nomeCompleto;
-        }
-
-        public int Getcodigo()
-        {
-            return codigo;
-        }
-
-        public string GetAutor()
-        {
-            return autor;
-        }
-
-        public int GetPags()
-        {
-            return pags;
-        }
-
-        public Livro SetPessoas(Pessoa pessoasInt)
-        {
-            pessoas = pessoasInt;
-            return this;
-        }
-
-        public Livro Setcodigo(int codigoInt)
-        {
-            codigo = codigoInt;
-            return this;
-        }
-
-        public Livro SetNome(string nomeInt)
-        {
-            nomeCompleto = nomeInt;
-            return this;
-        }
-
-        public Livro SetAutor(string AutorInt)
-        {
-            autor = AutorInt;
-            return this;
-        }
-
-        public Livro SetPags(int PagsInt)
-        {
-            pags = PagsInt;
-            return this;
-        }
-
-        public bool TipoPessoa()
-        {
-            return false;
-        }
+        public bool Ocupado() => pessoa != null;
 
         public bool Check(PseudoExc ex)
         {
-            if (!string.IsNullOrEmpty(GetAutor()))
+            if (!Valids.CheckStringNullOrEmpty(nomeCompleto))
             {
-                if (!string.IsNullOrEmpty(GetNome()))
+                if (!Valids.CheckStringNullOrEmpty(autor))
                 {
-                    if (int.IsPositive(GetPags()))
+                    if (Valids.CheckIsPositive(pags))
                     {
                         return true;
                     }
                     else
                     {
-                        ex.ex = "O numero de pagnas precsa ser positivo.";
+                        ex.ex = "O numero de paginas precsa ser positivo.";
                     }
                 }
                 else
                 {
-                    ex.ex = "O Nome precisa ser preenchido.";
+                    ex.ex = "O Autor precisa ser preenchido.";
                 }
             }
             else
             {
-                ex.ex = "O Autor precisa ser preenchido.";
+                ex.ex = "O Nome precisa ser preenchido.";
             }
             return false;
         }
 
-        public Window GetTelaCadastro()
+        public IItem Clone()
         {
-            return new TelaCadastroLivro();
-        }
-
-        public Window GetTelaInfo()
-        {
-            return new TelaLivro();
-        }
-        public bool Ocupado()
-        {
-            return pessoas != null;
+            Livro clone = (Livro)MemberwiseClone();
+            return clone;
         }
     }
 

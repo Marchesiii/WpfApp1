@@ -1,159 +1,149 @@
-﻿using System.Collections.ObjectModel;
-using WpfApp1.Model.Biblioteca.ItemsBiblioteca;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Controls;
+using WpfApp1.Model.Biblioteca.Interfaces;
 
-namespace WpfApp1.Model.Biblioteca
+namespace WpfApp1
 {
-    public class Biblioteca
+    public class Biblioteca : ILocatario
     {
-        public ObservableCollection<Pessoa> listaPessoa;
-        public ObservableCollection<Livro> listaLivros;
+        public List<IItem> ListaPessoa { get => new List<IItem>(listaPessoa); private set { } }
+        public List<IItem> ListaLivros { get => new List<IItem>(listaLivros); private set { } }
+        private List<Pessoa> listaPessoa;
+        private List<Livro> listaLivros;
         private int numPessoas;
         private int numLivros;
 
+
         public Biblioteca()
         {
-            listaPessoa = ListaStaticPessoa.listaStaticPessoa;
-            listaLivros = ListaStaticLivro.listaStaticLivro;
+            listaPessoa = new List<Pessoa>();
+            listaLivros = new List<Livro>();
             numPessoas = 0;
             numLivros = 0;
         }
 
-        public void EmprestarLivro(Livro livro, Pessoa pessoa)
+        private bool GetType(IItem item) => item.GetType().Equals(typeof(Pessoa));
+
+        public void EmprestarItem(IItem item, IItem locador)
         {
-            livro.SetPessoas(pessoa);
-            pessoa.AddLivrosEmprestados(livro);
+            ((Livro)item).Pessoa = (Pessoa)locador;
+            ((Pessoa)locador).LivrosEmprestados.Add((Livro)item);
         }
 
-        public void DevolveLivro(Livro livro, Pessoa pessoa)
+        public void DevolverItem(IItem item, IItem devolutor)
         {
-            pessoa.RemoveLivroEmprestado(livro);
-            livro.SetPessoas(null);
+            ((Pessoa)devolutor).LivrosEmprestados.Remove((Livro)item);
+            ((Livro)item).Pessoa = null;
         }
 
-        public ObservableCollection<Pessoa> SubstituiPessoa(Pessoa pessoaInt, Pessoa pessoaOri)
+        public List<Pessoa> SubstituiPessoa(Pessoa pessoaInt, Pessoa pessoaOri)
         {
-            listaPessoa.Remove(pessoaOri);
-            listaPessoa.Add(pessoaInt);
+            pessoaOri.Codigo = pessoaInt.Codigo;
+            pessoaOri.NomeCompleto = pessoaInt.NomeCompleto;
             return listaPessoa;
         }
 
-        public ObservableCollection<Livro> SubstituiLivro(Livro livroInt, Livro livroOri)
+        public List<Livro> SubstituiLivro(Livro livroInt, Livro livroOri)
         {
-            listaLivros.Remove(livroOri);
-            listaLivros.Add(livroInt);
+            livroOri.Autor = livroInt.Autor;
+            livroOri.NomeCompleto = livroInt.NomeCompleto;
+            livroOri.Pags = livroInt.Pags;
             return listaLivros;
         }
 
-        public ObservableCollection<Livro> AddLivro(Livro livro)
+        public List<IItem> AddItem(IItem item)
         {
-            AddNumLivros();
-            listaLivros.Add(livro.Setcodigo(numLivros));
-            return listaLivros;
+            item.Codigo = AddNumItem(item);
+            return AddListaItem(item);
         }
 
-        public ObservableCollection<IListable> AddItem(IListable ìtem)
+        public int AddNumItem(IItem item)
         {
-            if (ìtem.TipoPessoa())
+            if (GetType(item))
             {
-                return new ObservableCollection<IListable>(AddPessoa((Pessoa)ìtem));
-            }
-            return new ObservableCollection<IListable>(AddLivro((Livro)ìtem));
-        }
-
-        internal ObservableCollection<Pessoa> AddPessoa(Pessoa pessoa)
-        {
-            AddNumPessoa();
-            listaPessoa.Add(pessoa.SetCodigo(numPessoas));
-            return listaPessoa;
-        }
-
-        public ObservableCollection<IListable> RemoverItem(IListable itemSelecionado)
-        {
-            if (itemSelecionado.TipoPessoa())
-            {
-                RemoverPessoa((Pessoa)itemSelecionado);
-                return new ObservableCollection<IListable>(listaPessoa);
-
+                numPessoas++;
+                return numPessoas;
             }
             else
             {
-                RemoverLivro((Livro)itemSelecionado);
-                return new ObservableCollection<IListable>(listaLivros);
+                numLivros++;
+                return numLivros;
             }
+
         }
 
-        public bool RemoverPessoa(Pessoa pessoa)
+        public List<IItem> AddListaItem(IItem item)
         {
-            if (pessoa != null)
+            if (GetType(item))
             {
-                listaPessoa.Remove(pessoa);
-                RemoveNumPessoa();
-                return true;
+                listaPessoa.Add((Pessoa)item);
+                return new List<IItem>(listaPessoa);
             }
             else
             {
-                return false;
+                listaLivros.Add((Livro)item);
+                return new List<IItem>(listaLivros);
             }
-
         }
 
-        public bool RemoverLivro(Livro livro)
+
+        public List<IItem> RemoverItem(IItem itemSelecionado)
         {
-            if (livro != null)
+            List<IItem> lista = RemoverListaItem(itemSelecionado);
+            RemoveNumItem(itemSelecionado);
+            return lista;
+        }
+
+        public List<IItem> SubstituiItem(IItem itemClone, IItem item)
+        {
+            if (GetType(item))
             {
-                listaLivros.Remove(livro);
-                RemoveNumLivros();
-                return true;
+                return new List<IItem>(SubstituiPessoa((Pessoa)itemClone, (Pessoa)item));
             }
             else
             {
-                return false;
+                return new List<IItem>(SubstituiLivro((Livro)itemClone, (Livro)item));
             }
-
         }
 
-        public Biblioteca AddNumPessoa()
+        public List<IItem> ListaItens(Type type)
         {
-            numPessoas++;
-            return this;
+            if (type.Equals(typeof(Pessoa))){
+                return ListaPessoa;
+            }
+            return ListaLivros;
         }
 
-        public Biblioteca AddNumLivros()
+        private List<IItem> RemoverListaItem(IItem item)
         {
-            numLivros++;
-            return this;
-        }
-
-        public Biblioteca RemoveNumLivros()
-        {
-            return this;
-        }
-
-        public Biblioteca RemoveNumPessoa()
-        {
-            return this;
-        }
-
-        public ObservableCollection<IListable> SubstituiItem(IListable itemClone, IListable item)
-        {
-            if (item.TipoPessoa())
+            if (GetType(item))
             {
-                return new ObservableCollection<IListable>(SubstituiPessoa((Pessoa)itemClone, (Pessoa)item));
+                listaPessoa.Remove((Pessoa)item);
+                return new List<IItem>(listaPessoa);
             }
             else
             {
-                return new ObservableCollection<IListable>(SubstituiLivro((Livro)itemClone, (Livro)item));
+                listaLivros.Remove((Livro)item);
+                return new List<IItem>(listaLivros);
+            }
+
+        }
+
+        private void RemoveNumItem(IItem item)
+        {
+            if (GetType(item))
+            {
+                numPessoas--;
+            }
+            else
+            {
+                numLivros--;
             }
         }
-    }
 
-    internal static class ListaStaticPessoa
-    {
-        public static ObservableCollection<Pessoa> listaStaticPessoa = new ObservableCollection<Pessoa>();
-    }
 
-    internal static class ListaStaticLivro
-    {
-        public static ObservableCollection<Livro> listaStaticLivro = new ObservableCollection<Livro>();
     }
 }
