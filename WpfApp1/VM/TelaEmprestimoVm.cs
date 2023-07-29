@@ -11,8 +11,8 @@ namespace WpfApp1
 {
     public class TelaEmprestimoVm
     {
-        public ObservableCollection<IItemListavel> ListaListable { get; set; }
-        public IItemListavel? ItemSelecionado { get; set; }
+        public ObservableCollection<IListavel> ListaListable { get; set; }
+        public IListavel? ItemSelecionado { get; set; }
         public ILocador EmpresaLocadora;
         public IItemLocado Item { get; set; }
         public bool Tentou { get; set; }

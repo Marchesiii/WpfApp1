@@ -1,6 +1,6 @@
 ﻿namespace WpfApp1
 {
-    public interface IItemListavel
+    public interface IListavel
     {
 
     }

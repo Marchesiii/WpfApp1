@@ -8,12 +8,12 @@ namespace WpfApp1.Model.Biblioteca.Interfaces
 {
     public interface ILocador
     {
-        List<IItem> AddItem(IItem item);
+        List<IListavel> AddItem(IItem item);
         bool DevolverItem(IItem item);
         bool EmprestarItem(IItem item, IItem locatario);
         Emprestimo? ProcuraEmprestimo(IItem item);
-        List<IItem> ListaItens(Type type);
-        List<IItem> RemoverItem(IItem itemSelecionado);
-        List<IItem> SubstituiItem(IItem itemClone, IItem item);
+        List<IListavel> ListaItens(Type type);
+        List<IListavel> RemoverItem(IItem itemSelecionado);
+        List<IListavel> SubstituiItem(IItem itemClone, IItem item);
     }
 }

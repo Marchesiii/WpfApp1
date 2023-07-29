@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace WpfApp1
 {
-    public interface IItem : IItemListavel
+    public interface IItem : IListavel
     {
         public int Codigo { get; set; }
         public string NomeCompleto { get; set; }

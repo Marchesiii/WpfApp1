@@ -20,23 +20,23 @@ namespace WpfApp1
             tela.NomeCompleto = item.NomeCompleto;
             if (tipo.Equals(typeof(Pessoa))){
                 Pessoa pessoa = (Pessoa)item;
-                IEnumerable<Emprestimo> lista = ((Biblioteca)empresa).ListaEmprestimos.Where(emprestimo => emprestimo.CodigoPessoa == pessoa.Codigo);
+                IEnumerable<IListavel> lista = ((Biblioteca)empresa).ListaEmprestimos.Where(emprestimo => ((Emprestimo)emprestimo).CodigoPessoa == pessoa.Codigo);
                 List<IItemLocado> livros = new List<IItemLocado>();
                 foreach(Emprestimo emp in lista)
                 {
-                    livros.Add((IItemLocado)empresa.ListaItens(typeof(Livro)).Where( livro => livro.Codigo == emp.CodigoLivro).First());
+                    livros.Add((IItemLocado)empresa.ListaItens(typeof(Livro)).Where( livro => ((Livro)livro).Codigo == emp.CodigoLivro).First());
                 }
                 tela.LivrosEmprestados = livros;
             } else
             {
 
                 Livro livro = (Livro)item;
-                IEnumerable<Emprestimo> lista = ((Biblioteca)empresa).ListaEmprestimos.Where(emprestimo => emprestimo.CodigoLivro == livro.Codigo);
+                IEnumerable < Emprestimo > lista = (List<Emprestimo>)((Biblioteca)empresa).ListaEmprestimos.Where(emprestimo => ((Emprestimo)emprestimo).CodigoLivro == livro.Codigo);
                 tela.Autor = livro.Autor;
                 tela.Pags = livro.Pags;
                 if (lista.Any())
                 {
-                    tela.Pessoa = (IItemLocador)((Biblioteca)empresa).ListaPessoa.Where(pessoa => pessoa.Codigo == lista.First().CodigoPessoa).First();
+                    tela.Pessoa = (IItemLocador)((Biblioteca)empresa).ListaPessoa.Where(pessoa => ((Pessoa)pessoa).Codigo == lista.First().CodigoPessoa).First();
                 }
             }
             return tela;

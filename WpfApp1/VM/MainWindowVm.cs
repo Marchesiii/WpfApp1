@@ -27,14 +27,14 @@ namespace WpfApp1
             }
         }
 
-        public ObservableCollection<IItemListavel> ListaListable { get; private set; }
+        public ObservableCollection<IListavel> ListaListable { get; private set; }
         public ICommand Add { get; private set; }
         public ICommand Remove { get; private set; }
         public ICommand Update { get; private set; }
         public ICommand Emprestar { get; set; }
         public ICommand Devolver { get; set; }
         public ICommand Info { get; set; }
-        public IItemListavel? ItemSelecionado { get; set; }
+        public IListavel? ItemSelecionado { get; set; }
 
         public string TipoSelecionado { get; set; }
 
@@ -182,9 +182,9 @@ namespace WpfApp1
             return false;
         }
 
-        private ObservableCollection<IItemListavel> ConvertToListableObservable(List<IItem> lista) => new ObservableCollection<IItemListavel>(lista);
-        private Window GetTelaInfo(IItemListavel itemSelecionado) => itemSelecionado.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaPessoa() : new TelaLivro();
-        private static Window GetTelaCadastro(IItemListavel item) => item.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaCadastro() : new TelaCadastroLivro();
+        private ObservableCollection<IListavel> ConvertToListableObservable(List<IListavel> lista) => new ObservableCollection<IListavel>(lista);
+        private Window GetTelaInfo(IListavel itemSelecionado) => itemSelecionado.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaPessoa() : new TelaLivro();
+        private static Window GetTelaCadastro(IListavel item) => item.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaCadastro() : new TelaCadastroLivro();
 
         private bool GetTipoSelecionadoPessoa()
         {

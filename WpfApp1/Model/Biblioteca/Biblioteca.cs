@@ -11,10 +11,10 @@ namespace WpfApp1
 {
     public class Biblioteca : ILocador
     {
-        public List<IItem> ListaPessoa { get => new List<IItem>(listaPessoa); private set { } }
-        public List<IItem> ListaLivros { get => new List<IItem>(listaLivros); private set { } }
+        public List<IListavel> ListaPessoa { get => new List<IListavel>(listaPessoa); private set { } }
+        public List<IListavel> ListaLivros { get => new List<IListavel>(listaLivros); private set { } }
         private List<Pessoa> listaPessoa;
-        public List<Emprestimo> ListaEmprestimos { get => listaEmprestimos; private set { } }
+        public List<IListavel> ListaEmprestimos { get => new List<IListavel>(listaEmprestimos); private set { } }
         private List<Livro> listaLivros;
         private List<Emprestimo> listaEmprestimos;
         private int numPessoas;
@@ -86,7 +86,7 @@ namespace WpfApp1
             return listaLivros;
         }
 
-        public List<IItem> AddItem(IItem item)
+        public List<IListavel> AddItem(IItem item)
         {
             item.Codigo = AddNumItem(item);
             return AddListaItem(item);
@@ -107,41 +107,41 @@ namespace WpfApp1
 
         }
 
-        public List<IItem> AddListaItem(IItem item)
+        public List<IListavel> AddListaItem(IItem item)
         {
             if (GetType(item))
             {
                 listaPessoa.Add((Pessoa)item);
-                return new List<IItem>(listaPessoa);
+                return new List<IListavel>(listaPessoa);
             }
             else
             {
                 listaLivros.Add((Livro)item);
-                return new List<IItem>(listaLivros);
+                return new List<IListavel>(listaLivros);
             }
         }
 
 
-        public List<IItem> RemoverItem(IItem itemSelecionado)
+        public List<IListavel> RemoverItem(IItem itemSelecionado)
         {
-            List<IItem> lista = RemoverListaItem(itemSelecionado);
+            List<IListavel> lista = RemoverListaItem(itemSelecionado);
             RemoveNumItem(itemSelecionado);
             return lista;
         }
 
-        public List<IItem> SubstituiItem(IItem itemClone, IItem item)
+        public List<IListavel> SubstituiItem(IItem itemClone, IItem item)
         {
             if (GetType(item))
             {
-                return new List<IItem>(SubstituiPessoa((Pessoa)itemClone, (Pessoa)item));
+                return new List<IListavel>(SubstituiPessoa((Pessoa)itemClone, (Pessoa)item));
             }
             else
             {
-                return new List<IItem>(SubstituiLivro((Livro)itemClone, (Livro)item));
+                return new List<IListavel>(SubstituiLivro((Livro)itemClone, (Livro)item));
             }
         }
 
-        public List<IItem> ListaItens(Type type)
+        public List<IListavel> ListaItens(Type type)
         {
             if (type.Equals(typeof(IItemLocador)))
             {
@@ -161,17 +161,17 @@ namespace WpfApp1
 
         private bool GetType(IItem item) => item.GetType().Equals(typeof(Pessoa));
 
-        private List<IItem> RemoverListaItem(IItem item)
+        private List<IListavel> RemoverListaItem(IItem item)
         {
             if (GetType(item))
             {
                 listaPessoa.Remove((Pessoa)item);
-                return new List<IItem>(listaPessoa);
+                return new List<IListavel>(listaPessoa);
             }
             else
             {
                 listaLivros.Remove((Livro)item);
-                return new List<IItem>(listaLivros);
+                return new List<IListavel>(listaLivros);
             }
 
         }

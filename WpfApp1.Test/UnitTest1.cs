@@ -143,8 +143,8 @@ namespace WpfApp1.Test
             ((Livro)livro2).NomeCompleto = "Livro2";
             biblioteca.SubstituiItem(pessoa2, pessoa);
             biblioteca.SubstituiItem(livro2, livro);
-            bool result1 = ((Pessoa)biblioteca.ListaPessoa.First<IItem>()).NomeCompleto.Equals("Pessoa2");
-            bool result2 = ((Livro)biblioteca.ListaLivros.First<IItem>()).NomeCompleto.Equals("Livro2");
+            bool result1 = ((Pessoa)biblioteca.ListaPessoa.First()).NomeCompleto.Equals("Pessoa2");
+            bool result2 = ((Livro)biblioteca.ListaLivros.First()).NomeCompleto.Equals("Livro2");
             Assert.True(result1 && result2);
         }
 
@@ -154,8 +154,8 @@ namespace WpfApp1.Test
             IItem pessoa = CriaPessoaVaziaAdicionaNomeECodigo("Pessoa1", null);
             IItem livro = CriaLivroAdicionaParametros(null, "Novo Livro", "Novo Autor", 2);
             Biblioteca biblioteca = CriaBibliotecaComPessoaELivro((Pessoa)pessoa, (Livro)livro);
-            bool result1 = biblioteca.ListaPessoa.First<IItem>().Equals(pessoa);
-            bool result2 = biblioteca.ListaLivros.First<IItem>().Equals(livro);
+            bool result1 = biblioteca.ListaPessoa.First().Equals(pessoa);
+            bool result2 = biblioteca.ListaLivros.First().Equals(livro);
             Assert.True(result1 && result2);
         }
 
@@ -178,7 +178,7 @@ namespace WpfApp1.Test
             IItem pessoa = CriaPessoaVaziaAdicionaNomeECodigo("Pessoa1", null);
             IItem livro = CriaLivroAdicionaParametros(null, "Novo Livro", "Novo Autor", 2);
             Biblioteca biblioteca = CriaBibliotecaComPessoaELivro((Pessoa)pessoa, (Livro)livro);
-            Assert.True(biblioteca.ListaItens(typeof(IItemLocador)).First<IItem>().Equals(pessoa));
+            Assert.True(biblioteca.ListaItens(typeof(IItemLocador)).First().Equals(pessoa));
         }
 
         private static Emprestimo CriaEmprestimoAdicionaParametros()

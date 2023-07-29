@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WpfApp1
 {
-    public class Emprestimo
+    public class Emprestimo : IListavel
     {
         public int Codigo { get => codigo; set { codigo = value; } }
         public int CodigoLivro { get => codigoLivro; set {codigoLivro = value; } }
