@@ -3,24 +3,23 @@ using WpfApp1.Model.Biblioteca.Interfaces;
 
 namespace WpfApp1
 {
-    public class Livro : IItem
+    public class Livro : IItemLocado
     {
         private int codigo;
         private string nomeCompleto;
         private int pags;
         private string autor;
-        private Pessoa? pessoa;
+        private bool ocupado;
 
         public Livro()
         {
-            pessoa = null;
+            ocupado = false;
             codigo = 0;
             nomeCompleto = string.Empty;
             autor = string.Empty;
             pags = 0;
         }
         public int Codigo { get => codigo; set { codigo = value; } }
-        public Pessoa? Pessoa { get => pessoa; set { pessoa = value; } }
         public int Pags { get => pags; set { pags = value; } }
         public string NomeCompleto
         {
@@ -30,7 +29,7 @@ namespace WpfApp1
             {
                 if (Valids.CheckStringNullOrEmpty(value))
                 {
-                    Valids.DisplayValidationError("Precisamos definir um nome para o Livro.");
+                    Valids.DisplayValidationError(ValidsStrings.ErroNomeEmptyOrNull);
                 }
                 else
                 {
@@ -46,7 +45,7 @@ namespace WpfApp1
             {
                 if (Valids.CheckStringNullOrEmpty(value))
                 {
-                    Valids.DisplayValidationError("Precisamos definir um autor.");
+                    Valids.DisplayValidationError(ValidsStrings.ErroAutorEmptyOrNull);
                 }
                 else
                 {
@@ -55,8 +54,12 @@ namespace WpfApp1
             }
         }
 
-        public bool Ocupado() => pessoa != null;
+        public bool Ocupado() => ocupado;
 
+        public void SetOcupado(bool ocupadoExt)
+        {
+            ocupado = ocupadoExt;
+        }
         public bool Check(PseudoExc ex)
         {
             if (!Valids.CheckStringNullOrEmpty(nomeCompleto))
@@ -69,17 +72,17 @@ namespace WpfApp1
                     }
                     else
                     {
-                        ex.ex = "O numero de paginas precsa ser positivo.";
+                        ex.ex = ValidsStrings.ErroPagsNegativo;
                     }
                 }
                 else
                 {
-                    ex.ex = "O Autor precisa ser preenchido.";
+                    ex.ex = ValidsStrings.ErroAutorEmptyOrNull;
                 }
             }
             else
             {
-                ex.ex = "O Nome precisa ser preenchido.";
+                ex.ex = ValidsStrings.ErroNomeEmptyOrNull;
             }
             return false;
         }

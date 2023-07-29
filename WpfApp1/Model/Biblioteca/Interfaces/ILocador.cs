@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.Model.Biblioteca.Interfaces
 {
-    public interface ILocatario
+    public interface ILocador
     {
         List<IItem> AddItem(IItem item);
-        void DevolverItem(IItem item, IItem devolutor);
-        void EmprestarItem(IItem item, IItem locador);
+        bool DevolverItem(IItem item);
+        bool EmprestarItem(IItem item, IItem locatario);
+        Emprestimo? ProcuraEmprestimo(IItem item);
         List<IItem> ListaItens(Type type);
         List<IItem> RemoverItem(IItem itemSelecionado);
         List<IItem> SubstituiItem(IItem itemClone, IItem item);

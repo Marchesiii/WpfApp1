@@ -7,20 +7,19 @@ using WpfApp1.Model.Biblioteca.Interfaces;
 
 namespace WpfApp1
 {
-    public class Pessoa : IItem
+    public class Pessoa : IItemLocador
     {
         private string nomeCompleto;
         private int codigo;
-        private List<Livro> livrosEmprestados;
+        private bool ocupado;
 
         public Pessoa()
         {
             nomeCompleto = "";
             codigo = 0;
-            livrosEmprestados = new List<Livro>();
+            ocupado = false;
         }
 
-        public List<Livro> LivrosEmprestados { get => livrosEmprestados; private set { livrosEmprestados = value; } }
 
         public string NomeCompleto
         {
@@ -29,7 +28,7 @@ namespace WpfApp1
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    MessageBox.Show("Precisamos definir um nome para a Pessoa.");
+                    MessageBox.Show(ValidsStrings.ErroNomeEmptyOrNull);
                 }
                 else
                 {
@@ -45,13 +44,16 @@ namespace WpfApp1
                 codigo = value;
             }
         }
-        public bool Ocupado() => livrosEmprestados.Any();
-
+        public bool Ocupado() => ocupado;
+        public void SetOcupado(bool ocupadoExt)
+        {
+            ocupado = ocupadoExt;
+        }
         public bool Check(PseudoExc ex)
         {
             if (string.IsNullOrEmpty(nomeCompleto))
             {
-                ex.ex = "Precisamos definir um nome para a Pessoa.";
+                ex.ex = ValidsStrings.ErroNomeEmptyOrNull;
                 return false;
             }
             else

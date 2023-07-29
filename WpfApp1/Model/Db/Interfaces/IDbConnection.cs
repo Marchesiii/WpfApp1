@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.Common;
 
 namespace WpfApp1
 
 {
-    public class IDbConnection
+    public interface IDbConnection
     {
+        public void Close();
+        public DbConnection GetConnection();
 
     }
 }

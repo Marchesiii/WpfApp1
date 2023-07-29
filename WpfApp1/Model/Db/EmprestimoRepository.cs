@@ -7,7 +7,7 @@ using WpfApp1.Model.Biblioteca.Interfaces;
 
 namespace WpfApp1
 {
-    public class LivroRepository : IRepositoryItemOcupavel
+    public class EmprestimoRepository : IRepository
     {
         public bool Add(IItem item)
         {
@@ -35,11 +35,6 @@ namespace WpfApp1
         }
 
         public IItem GetByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IItem GetOcupados()
         {
             throw new NotImplementedException();
         }

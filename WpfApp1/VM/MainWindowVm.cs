@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Data.Common;
 using System.Windows;
 using System.Windows.Input;
 using WpfApp1.Model.Biblioteca.Interfaces;
@@ -10,21 +11,30 @@ namespace WpfApp1
 {
     public class MainWindowVm : INotifyPropertyChanged
     {
-        private readonly ILocatario locatario;
+        private readonly ILocador EmpresaLocadora;
+        private readonly IDbConnection conn;
         public MainWindowVm()
         {
-            locatario = new Biblioteca();
-            IniciaCommandos();
+            conn = new PostgresConnection();
+            try
+            {
+                EmpresaLocadora = new Biblioteca();
+                IniciaCommandos();
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
 
-        public ObservableCollection<IItem> ListaListable { get; private set; }
+        public ObservableCollection<IItemListavel> ListaListable { get; private set; }
         public ICommand Add { get; private set; }
         public ICommand Remove { get; private set; }
         public ICommand Update { get; private set; }
         public ICommand Emprestar { get; set; }
         public ICommand Devolver { get; set; }
         public ICommand Info { get; set; }
-        public IItem? ItemSelecionado { get; set; }
+        public IItemListavel? ItemSelecionado { get; set; }
 
         public string TipoSelecionado { get; set; }
 
@@ -41,32 +51,32 @@ namespace WpfApp1
             GetVmListableWithNotify();
             Add = new RelayCommand((param) =>
             {
-                IItem item = TipoSelecionado.Equals(nameof(Pessoa)) ? new Pessoa() : new Livro(); 
+                IItem item = GetTipoSelecionadoPessoa() ? new Pessoa() : new Livro();
                 if (AlterarItem(item))
                 {
-                    ListaListable = ConvertToListableObservable(locatario.AddItem(item));
+                    ListaListable = ConvertToListableObservable(EmpresaLocadora.AddItem(item));
                 }
-                   
+
                 Notifica(nameof(ListaListable));
             });
             Remove = new RelayCommand((param) =>
             {
                 if (ItemSelecionado != null)
                 {
-                    ListaListable = ConvertToListableObservable(locatario.RemoverItem(ItemSelecionado));
+                    ListaListable = ConvertToListableObservable(EmpresaLocadora.RemoverItem(((IItem)ItemSelecionado)));
                 }
                 Notifica(nameof(ListaListable));
-            }, (param2) => ItemSelecionado != null && !ItemSelecionado.Ocupado()
+            }, (param2) => ItemSelecionado != null && !((IItem)ItemSelecionado).Ocupado()
             );
             Update = new RelayCommand((param) =>
             {
                 if (ItemSelecionado != null)
                 {
-                    IItem item = ItemSelecionado;
-                    IItem itemClone = ItemSelecionado.Clone();
-                    if(AlterarItem(itemClone))
+                    IItem item = ((IItem)ItemSelecionado);
+                    IItem itemClone = ((IItem)ItemSelecionado).Clone();
+                    if (AlterarItem(itemClone))
                     {
-                        ListaListable = ConvertToListableObservable(locatario.SubstituiItem(itemClone, item));
+                        ListaListable = ConvertToListableObservable(EmpresaLocadora.SubstituiItem(itemClone, item));
                     }
                 }
                 Notifica(nameof(ListaListable));
@@ -74,50 +84,39 @@ namespace WpfApp1
             );
             Emprestar = new RelayCommand((param) =>
             {
+            if (ItemSelecionado != null)
+            {
+                IItemLocado livro = (IItemLocado)ItemSelecionado;
                 try
                 {
-                    if (ItemSelecionado != null)
-                    {
-                        Livro livro = (Livro)ItemSelecionado;
-                        ItemSelecionado = null;
-                        ListaListable = ConvertToListableObservable(locatario.ListaItens(typeof(Pessoa)));
-                        bool results = true;
-                        while (results)
+                    bool results = false;
+                    TelaEmprestimoVm tela = null;
+                    while (!results && (tela == null || tela.Tentou == true))
                         {
-                            ListaEmprestimos listaEmp = new ListaEmprestimos
-                            {
-                                DataContext = this
-                            };
+                            tela = new TelaEmprestimoVm();
+                            ListaEmprestimos listaEmp = new ListaEmprestimos();
+                            tela.ListaListable = ConvertToListableObservable(EmpresaLocadora.ListaItens(typeof(IItemLocador)));
+                            tela.EmpresaLocadora = EmpresaLocadora;
+                            tela.Item = (IItemLocado)ItemSelecionado;
+                            listaEmp.Tela = tela;
+                            listaEmp.DataContext = tela;
                             listaEmp.ShowDialog();
                             results = (bool)listaEmp.DialogResult;
-                            if (results && ItemSelecionado != null)
-                            {
-                                locatario.EmprestarItem(livro, (Pessoa)ItemSelecionado);
-                                MessageBox.Show("Livro emprestado para: " + ((Pessoa)ItemSelecionado).NomeCompleto);
-                                return;
-                            }
-                            else
-                            {
-                                if (results)
-                                { 
-                                    MessageBox.Show("Selecione ao menos uma pessoa para efetivar o emprestimo ou feche a aba.");
-                                }
-                            }
                         }
                     }
-                }
-                finally
-                {
-                    ListaListable = ConvertToListableObservable(locatario.ListaItens(typeof(Livro)));
-                    Notifica(nameof(ListaListable));
+                    finally
+                    {
+                        ListaListable = ConvertToListableObservable(EmpresaLocadora.ListaItens(typeof(IItemLocado)));
+                        Notifica(nameof(ListaListable));
+                    }
                 }
             }, (param2) =>
             {
                 if (ItemSelecionado != null && !GetTipoSelecionadoPessoa())
                 {
-                    if (!ItemSelecionado.GetType().Equals(typeof(Pessoa)))
+                    if (ItemSelecionado.GetType().GetInterface(nameof(IItemLocado)) != null)
                     {
-                        return !ItemSelecionado.Ocupado();
+                        return !((IItem)ItemSelecionado).Ocupado();
                     }
                 }
                 return false;
@@ -126,23 +125,19 @@ namespace WpfApp1
             {
                 if (ItemSelecionado != null)
                 {
-                    Livro livro = (Livro)ItemSelecionado;
-                    Pessoa? pessoa = livro.Pessoa;
-                    if (pessoa != null)
-                    {
-                        locatario.DevolverItem(livro, pessoa);
-                        MessageBox.Show("Livro devolvido por: " + pessoa.NomeCompleto);
-                    }
+                    IItemLocado livro = (IItemLocado)ItemSelecionado;
+                    EmpresaLocadora.DevolverItem(livro);
+                    MessageBox.Show("Livro devolvido");
+                    
                 }
                 Notifica(nameof(ListaListable));
             }, (param2) =>
             {
                 if (ItemSelecionado != null && !GetTipoSelecionadoPessoa())
                 {
-                    if (!ItemSelecionado.GetType().Equals(typeof(Pessoa)))
+                    if (ItemSelecionado.GetType().GetInterface(nameof(IItemLocado)) != null)
                     {
-                        return ItemSelecionado.Ocupado();
-
+                        return ((IItem)ItemSelecionado).Ocupado();
                     }
                 }
                 return false;
@@ -152,7 +147,10 @@ namespace WpfApp1
                 if (ItemSelecionado != null)
                 {
                     Window tela = GetTelaInfo(ItemSelecionado);
-                    tela.DataContext = ItemSelecionado;
+                    TelaInfoVm telaInfo = new TelaInfoVm();
+                    TelaInfoBuilder telaInfoBuilder = new TelaInfoBuilder(ItemSelecionado.GetType());
+                    telaInfoBuilder.CreateTelaInfo(telaInfo, (IItem)ItemSelecionado, EmpresaLocadora);
+                    tela.DataContext = telaInfo;
                     tela.ShowDialog();
                 }
             }, (param2) => ItemSelecionado != null
@@ -184,9 +182,9 @@ namespace WpfApp1
             return false;
         }
 
-        private ObservableCollection<IItem> ConvertToListableObservable(List<IItem> lista) => new ObservableCollection<IItem>(lista);
-        private Window GetTelaInfo(IItem itemSelecionado) => itemSelecionado.GetType().Equals(typeof(Pessoa)) ? new TelaPessoa() : new TelaLivro();
-        private static Window GetTelaCadastro(IItem item) => item.GetType().Equals(typeof(Pessoa)) ? new TelaCadastro() : new TelaCadastroLivro();
+        private ObservableCollection<IItemListavel> ConvertToListableObservable(List<IItem> lista) => new ObservableCollection<IItemListavel>(lista);
+        private Window GetTelaInfo(IItemListavel itemSelecionado) => itemSelecionado.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaPessoa() : new TelaLivro();
+        private static Window GetTelaCadastro(IItemListavel item) => item.GetType().GetInterface(nameof(IItemLocador)) != null ? new TelaCadastro() : new TelaCadastroLivro();
 
         private bool GetTipoSelecionadoPessoa()
         {
@@ -209,12 +207,12 @@ namespace WpfApp1
 
         private void GetVmLivrosToListable()
         {
-            ListaListable = ConvertToListableObservable(locatario.ListaItens(typeof(Livro)));
+            ListaListable = ConvertToListableObservable(EmpresaLocadora.ListaItens(typeof(IItemLocado)));
         }
 
         private void GetVmPessoasToListable()
         {
-            ListaListable = ConvertToListableObservable(locatario.ListaItens(typeof(Pessoa)));
+            ListaListable = ConvertToListableObservable(EmpresaLocadora.ListaItens(typeof(IItemLocador)));
         }
 
 
